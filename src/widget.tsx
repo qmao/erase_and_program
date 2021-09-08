@@ -124,7 +124,17 @@ export default function VerticalTabs(
                 console.log(reply);
                 setLoading(false);
                 setFileList(reply);
-                setPackrat(filename);
+
+                // set select packrat
+                console.log(reply);
+
+                reply.forEach((element: any) => {
+                    if (element.includes(filename)) {
+                        console.log("include test: ", element);
+                        setPackrat(element);
+                    }
+                });
+
                 return reply;
             } catch (error) {
                 if (error) {

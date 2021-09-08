@@ -14,18 +14,19 @@ import uuid
 from werkzeug import secure_filename
 import grp, pwd
 import glob
+import re
 
 import sys
 sys.path.append("/usr/local/syna/python")
 from touchcomm import TouchComm
 from programmer import AsicProgrammer
 
-packrat_root = "/packrat"
+packrat_cache = "/usr/local/syna/cache/packrat"
 
 def GetFileList(extension):
     filelist = []
-    os.chdir(packrat_root)
-    for file in glob.glob("*." + extension):
+    os.chdir(packrat_cache)
+    for file in glob.glob("**/*." + extension):
         print(file)
         filelist += [str(file)]
 
@@ -34,6 +35,15 @@ def GetFileList(extension):
     jsonString = json.dumps(filelist)
     return jsonString
 
+def GetSymbolValue(symbol, content):
+    find=r'(?<='+ symbol + r'=").*(?=")'
+    x = re.findall(find, content)
+    print(len(x))
+    if (len(x) > 0):
+        return x[0]
+    else:
+        return None
+    
 
 class ProgramHandler(APIHandler):
     # The following decorator should be present on all verb methods (head, get, post,
@@ -54,7 +64,7 @@ class ProgramHandler(APIHandler):
         print("start to erase and program!!!")
         ####PR3319382.hex
         
-        filename = os.path.join('/packrat', input_data["filename"])
+        filename = os.path.join(packrat_cache, input_data["filename"])
         print(filename)
 
         if not os.path.isfile(filename):
@@ -101,16 +111,17 @@ class UploadHandler(APIHandler):
                 print(filename)
                 print(content_type)
 
-
                 ## save file
-                save_father_path = '/packrat'
-                ##img_path = os.path.join(save_father_path, str(uuid.uuid1()) + '.' + secure_filename(f.filename).split('.')[-1])
+                ## img_path = os.path.join(save_father_path, str(uuid.uuid1()) + '.' + secure_filename(f.filename).split('.')[-1])
 
-                ### regular expression to find packrat number
-                if not os.path.exists(save_father_path):
-                    os.makedirs(save_father_path)
+                packrat_dir = GetSymbolValue("PACKRAT_ID", body.decode('utf-8'))
+                print(packrat_dir)
 
-                file_path = os.path.join(save_father_path, filename)
+                path = os.path.join(packrat_cache, packrat_dir)
+                if not os.path.exists(path):
+                    os.makedirs(path)
+
+                file_path = os.path.join(path, filename)
                 print(file_path)
 
                 with open(file_path, 'wb') as f:
@@ -147,7 +158,7 @@ class GetListHandler(APIHandler):
         elif (action == 'delete'):
             filename = input_data["file"]
             print("delete file: ", filename)
-            os.remove(packrat_root + "/" + filename)
+            os.remove(packrat_cache + "/" + filename)
 
             filelist = GetFileList(extension)
             self.finish(filelist)
