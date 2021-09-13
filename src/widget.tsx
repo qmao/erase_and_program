@@ -6,12 +6,12 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import UploadButtons from './upload_ui'
+import UploadButtons from './upload'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import FileList from './filelist'
 import { requestAPI } from './handler';
-import ButtonUi from './button_ui'
+import ButtonProgram from './program'
 import Paper from '@material-ui/core/Paper';
 import { UserContext } from './context';
 
@@ -235,7 +235,7 @@ export default function VerticalTabs(
                 </TabPanel>
             </Paper>
             <Paper className={classes.paper_program}>
-                <ButtonUi title="PROGRAM"/>
+                <ButtonProgram title="PROGRAM"/>
             </Paper>
         </div>
         </UserContext.Provider>
