@@ -48,10 +48,15 @@
     "@jupyterlab/application": "^3.1.0",
     "@jupyterlab/coreutils": "^5.1.0",
     "@jupyterlab/launcher": "^3.1.0",
-    "@jupyterlab/services": "^6.1.0"
+    "@jupyterlab/services": "^6.1.0",
+    "isomorphic-ws": "^4.0.1",
+    "universal-websocket-client": "^1.0.2",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@jupyterlab/builder": "^3.1.0",
+    "@types/websocket": "^1.0.4",
+    "@types/ws": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "eslint": "^7.14.0",

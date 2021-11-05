@@ -12,6 +12,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import Fab from '@mui/material/Fab';
 
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 export interface IProgramInfo {
     filename: string;
@@ -168,6 +169,44 @@ export default function ButtonProgram(props: ButtonProps) {
         console.log("filename:", file_name);
 
         try {
+
+            console.log('I want test websocket!!!');
+
+            let client = new W3CWebSocket('ws://pi-syna.local:8889/echo');
+            console.log(client.readyState)
+
+            for (let i = 0; i < 10; i++) {
+                console.log(client.readyState)
+                if (client.readyState) {
+                    console.log("send message!!!")
+
+                    let pong: any = { Type: "Pong" };
+                    client.send(JSON.stringify(pong));
+
+                    //client.send("message")
+                    break;
+                }
+                new Promise(f => setTimeout(f, 1000));
+            }
+
+            client.send("message")
+
+            //client.onmessage = event => {
+            //    console.log(event)
+            //}
+
+            new Promise(f => setTimeout(f, 10000));
+
+            console.log('I want test request after websocket!!!');
+
+
+
+
+
+
+
+
+
             const reply = await requestAPI<any>('program', {
                 body: JSON.stringify(dataToSend),
                 method: 'POST',
